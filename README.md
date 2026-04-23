@@ -167,27 +167,32 @@ Goodbye!
 ## 🔄 LangGraph Workflow
 
 ```text
-User Query
-    │
-    ▼
+                User Query
+                    │
+                    ▼
+            ┌─────────────┐
+            │ router_node │
+            └──────┬──────┘
+                   │
+       ┌───────────┴───────────┐
+       │                       │
+       ▼                       ▼
+(normal query)        (invalid / too short)
+       │                       │
+       ▼                       ▼
+┌──────────────┐        ┌───────────────┐
+│ process_node │        │ escalate_node │ (HITL)
+└──────┬───────┘        └───────────────┘
+       │
+       │
+       ▼
 ┌─────────────┐
-│ router_node │ ── too short / no real words? ──► ┐
-└─────────────┘                                  │
-    │                                            │
-    ▼                                            │
-┌──────────────┐                                 │
-│ process_node │ ── not enough docs OR          │
-│              │    LLM says "I don't know"? ─► │
-└──────────────┘                                 │
-    │                                            ▼
-    ▼                                  ┌───────────────┐
-┌─────────────┐                       │ escalate_node │ (HITL)
-│ output_node │                       └───────────────┘
-└─────────────┘
-    │
-    └────────────── END
+│ output_node │
+└──────┬──────┘
+       │
+       ▼
+      END
 ```
-
 ---
 
 ## 🧩 Nodes
